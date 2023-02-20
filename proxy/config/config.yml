@@ -1,0 +1,22 @@
+## Configuration file for the LFSPROXY (Local File Service Proxy)
+
+# REST Server configuration
+server:
+  host: "localhost"
+  port: 9990
+
+  # Specifies whether to log all incoming REST requests to the debug log.
+  # Note - this value should be set to false in production. Toggle only
+  # for debugging purposes when other avenues have been exhausted.
+  log_rest_requests: true
+
+# gRPC server configuration for client to conecte to
+rpc_server:
+  host: "localhost"
+  port: 8001
+
+# Files cache configuration
+files:
+  path: "/tmp"
+  
+test_mode: true

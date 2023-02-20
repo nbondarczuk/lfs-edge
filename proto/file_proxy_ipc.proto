@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package proto;
+
+import "file_proxy_ipc_common.proto";
+
+option go_package = "github.azc.ext.hp.com/Krypton/lfs-edge/proto";
+
+// file proxy ipc definition
+service FileProxyIPC {
+	// ping for liveliness checks
+	rpc Ping(PingRequest) returns (PingResponse) {}
+	// Get file location if in cache
+	// If not in cache, initiate transfer
+	rpc GetFile(GetFileRequest) returns (GetFileResponse) {}
+}
+
+// The request message contains file id
+message GetFileRequest {
+	// common request header
+	FileRequestHeader header = 1;
+
+	// id of the requesting device
+	string DeviceID = 2;
+
+	// this is the file id obtained from cloud file service
+	uint64 FileID = 3;
+}
+
+// The reply contains info about file status
+message GetFileResponse {
+	// common response header 
+	// status code of operation is returned as header.Status
+	FileResponseHeader header = 1;
+
+	// time to wait in seconds before retrying
+	// > 0 if header.Status is FAILED_PRECONDITION. 
+	// -1 if header.Status=NOT_FOUND
+	// -1 indicates not retriable.
+	int32 RetryAfterSeconds = 2;
+
+	// file path.
+	string FilePath = 3;
+}

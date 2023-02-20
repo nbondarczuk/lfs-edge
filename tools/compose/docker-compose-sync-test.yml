@@ -1,0 +1,18 @@
+version: '3'
+services:
+  sync-test:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-test-runner
+    hostname: ${SYNC_TEST}.${DOMAIN}
+    container_name: ${SYNC_TEST}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${SYNC_TEST}.${DOMAIN}
+    volumes:
+      - ../../../lfs-edge:/go/src/lfs-edge
+    working_dir: /go/src/lfs-edge/sync
+    command: make unit-test
+    tty: true
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,59 @@
+version: '3'
+services:
+  cache:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-cache
+    hostname: ${CACHE}.${DOMAIN}
+    container_name: ${CACHE}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${CACHE}.${DOMAIN}
+    environment:
+      - CACHE_PASSWORD=${CACHE_PASSWORD}
+    tty: true
+  db:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-db
+    hostname: ${DB}.${DOMAIN}
+    container_name: ${DB}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${DB}.${DOMAIN}
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    tty: true
+  sqs:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-local-sqs
+    hostname: ${SQS}.${DOMAIN}
+    container_name: ${SQS}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${SQS}.${DOMAIN}
+    volumes:
+      - ./elasticmq.conf:/opt/elasticmq.conf:ro
+    tty: true
+  localfs:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-local-storage
+    hostname: ${LOCALFS}.${DOMAIN}
+    container_name: ${LOCALFS}.${DOMAIN}
+    ports:
+      - ${LOCALFS_PORT}:${LOCALFS_PORT}
+    networks:
+      backend:
+        aliases:
+          - ${LOCALFS}.${DOMAIN}
+    environment:
+      - MINIO_ACCESS_KEY=${LOCALFS_USER}
+      - MINIO_SECRET_KEY=${LOCALFS_PASS}
+      - FS_BUCKET_NAMES=${LOCALFS_BUCKET_NAMES}
+      - SQS_HOST=${SQS}.${DOMAIN}
+      - SQS_QUEUE_NAME=${SQS_NAME}
+    tty: true
+    depends_on:
+      - sqs
+networks:
+  backend:
+    driver: bridge

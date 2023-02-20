@@ -1,0 +1,18 @@
+version: '3'
+services:
+  proxy-test:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-test-runner
+    hostname: ${PROXY_TEST}.${DOMAIN}
+    container_name: ${PROXY_TEST}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${PROXY_TEST}.${DOMAIN}
+    volumes:
+      - ../../../lfs-edge:/go/src/lfs-edge
+    working_dir: /go/src/lfs-edge/proxy
+    command: make unit-test
+    tty: true
+networks:
+  backend:
+    driver: bridge

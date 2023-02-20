@@ -1,0 +1,16 @@
+## for development purposes. opens all dependent ports
+## useful for debugging
+version: '3'
+services:
+  cache:
+    ports:
+      - ${CACHE_PORT}:${CACHE_PORT}
+  db:
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+  sqs:
+    ports:
+      - ${SQS_PORT}:${SQS_PORT}
+  localfs:
+    ports:
+      - ${LOCALFS_PORT}:${LOCALFS_PORT}

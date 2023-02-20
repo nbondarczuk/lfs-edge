@@ -1,0 +1,25 @@
+## Configuration file for lfs-edge sync service
+
+# RPC Server configuration.
+server:
+  host: "localhost"
+  rpc_port: 8001
+
+# Database configuration.
+database:
+  path: "/tmp/sync.db"
+  schema: "db/schema"
+  migrate: false
+
+# Files storage configuration.
+files:
+  storage_path: "/tmp"
+  max_disk_use: "1G"
+  space_management_policy: "delete_oldest"
+  retry_after_seconds: 5
+  file_server_host: "localhost"
+  file_server_port: 1234
+  file_server_url_template: "http://%s:%d/api/internal/v1/files/%%d/signed_url?method=get"
+  pending_channel_size: 10
+
+test_mode: true

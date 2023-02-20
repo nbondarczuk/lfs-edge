@@ -1,0 +1,18 @@
+version: '3'
+services:
+  common-test:
+    image: docker.github.azc.ext.hp.com/krypton/images/krypton-test-runner
+    hostname: ${COMMON_TEST}.${DOMAIN}
+    container_name: ${COMMON_TEST}.${DOMAIN}
+    networks:
+      backend:
+        aliases:
+          - ${COMMON_TEST}.${DOMAIN}
+    volumes:
+      - ../../../lfs-edge:/go/src/lfs-edge
+    working_dir: /go/src/lfs-edge/common
+    command: make unit-test
+    tty: true
+networks:
+  backend:
+    driver: bridge
